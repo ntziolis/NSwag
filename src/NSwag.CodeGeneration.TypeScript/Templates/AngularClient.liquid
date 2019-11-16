@@ -38,14 +38,13 @@
 {% endif -%}
 {% for operation in Operations -%}
 
-	{%- assign nonQueryParameters = operation.Parameters | where: "IsQuery", "false" -%}
+	{%- assign nonQueryParameters = operation.Parameters | where: "IsQuery", false -%}
 	{%- assign hasWrappedQueryParameter = operation.IsGetOrHead and operation.QueryParameters.size > 0 -%}
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.nonQueryParameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or hasWrappedQueryParameter == true %}, {%- endif -%}{%- endfor -%}
-	{%- if hasWrappedQueryParameter -%}request: {%- for parameter in operation.QueryParameters %}
+    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in nonQueryParameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or hasWrappedQueryParameter == true %}, {% endif -%}{%- endfor -%}
+	{%- if hasWrappedQueryParameter == true -%}request: {%- for parameter in operation.QueryParameters %}
 			{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }},{%- endfor -%}		
 		}{%- endif -%}): Observable<{{ operation.ResultType }}> {
-
         {% template Client.RequestUrl %}
 
 {%     if operation.HasBody -%}
