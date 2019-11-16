@@ -37,8 +37,9 @@
     {{ ExtensionCode }}
 {% endif -%}
 {% for operation in Operations -%}
+
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% if operation.IsGetOrHead -%}request: { {% endif -%}{% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false%}, {% endif %}{% endfor %}{% if operation.IsGetOrHead -%} }{% endif -%}): Observable<{{ operation.ResultType }}> {
+    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% if operation.IsGetOrHead and operation.QueryParameters.size  > 0 -%}request: { {% endif -%}{% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false%}, {% endif %}{% endfor %}{% if operation.IsGetOrHead and operation.QueryParameters.size > 0 -%} }{% endif -%}): Observable<{{ operation.ResultType }}> {
         {% template Client.RequestUrl %}
 
 {%     if operation.HasBody -%}
