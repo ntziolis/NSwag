@@ -40,7 +40,7 @@
 
 	{%- assign openBraces = "{" -%}
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in nonQueryParameters %}{% if parameter.IsQuery == false %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or operation.IsGetOrHead == true and operation.QueryParameters.size > 0 %}, {% endif -%}{% endif -%}{%- endfor -%}
+    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{% if parameter.IsQuery == false %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or operation.IsGetOrHead == true and operation.QueryParameters.size > 0 %}, {% endif -%}{% endif -%}{%- endfor -%}
 	{%- if operation.IsGetOrHead and operation.QueryParameters.size > 0 -%}request: {{ openBraces }}{%- for parameter in operation.QueryParameters %}
 		{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }},{%- endfor %}
 	} {%- endif -%}): Observable<{{ operation.ResultType }}> {
