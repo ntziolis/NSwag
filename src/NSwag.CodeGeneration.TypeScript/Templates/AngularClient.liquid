@@ -38,8 +38,6 @@
 {% endif -%}
 {% for operation in Operations -%}
 
-	{%- assign nonQueryParameters = operation.Parameters | where: "IsQuery", false -%}
-	{%- assign hasWrappedQueryParameter = operation.IsGetOrHead and operation.QueryParameters.size > 0 -%}
 	{%- assign openBraces = "{" -%}
     {% template Client.Method.Documentation %}
     {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in nonQueryParameters %}{% if parameter.IsQuery == false %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false or operation.IsGetOrHead == true and operation.QueryParameters.size > 0 %}, {% endif -%}{% endif -%}{%- endfor -%}
